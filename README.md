@@ -2,16 +2,17 @@
 
 * [Guidelines](#guidelines)
 * [Pragmatic REST](#pragmatic-rest)
-* [URLs](#urls)
+* [RESTful URLs](#restful-urls)
 * [HTTP Verbs](#http-verbs)
 * [Responses](#responses)
 * [Error handling](#error-handling)
 * [Versions](#versions)
-* [Record limits / Pagers](#limits-pagers)
+* [Record limits](#record-limits)
 * [Request & Response Examples](#request-response-examples)
 * [Mock Responses](#mock-responses)
+* [JSONP](#jsonp)
 
-## <a id="guidelines"></a>Guidelines
+## Guidelines
 
 This document provides guidelines and examples for White House Web APIs, encouraging consistency, maintainability, and best practices across applications. White House APIs aim to balance a truly RESTful API interface with a positive developer experience (DX).
 
@@ -21,15 +22,15 @@ This document borrows heavily from:
 * Web API Design, by Brian Mulloy, APIGee
 * [Fieldings Dissertation on REST](http://www.ics.uci.edu/~fielding/pubs/dissertation/top.htm)
 
-## <a id="pragmatic-rest"></a>Pragmatic REST
+## Pragmatic REST
 
 These guidelines aim to support a truly RESTful API. Here are a few exceptions:
 * Put the version number of the API in the URL (see examples below). Don’t accept any requests that do not specify a version number.
 * Allow users to request formats like JSON or XML like this:
-    * http://whitehouse.gov/api/v1/blogs.json
-    * http://whitehouse.gov/api/v1/blogs.xml
+    * http://example.gov/api/v1/magazines.json
+    * http://example.gov/api/v1/magazines.xml
 
-## <a id="urls"></a>RESTful URLs
+## RESTful URLs
 
 ### General guidelines for RESTful URLs
 * A URL identifies a resource.
@@ -45,37 +46,33 @@ These guidelines aim to support a truly RESTful API. Here are a few exceptions:
 * Formats should be in the form of api/v2/resource/{id}.json
 
 ### Good URL examples
-* List of blog posts:
-    * http://www.whitehouse.gov/api/v1/blogs.json
+* List of magazines:
+    * http://www.example.gov/api/v1/magazines.json
 * Filtering is a query:
-    * http://www.whitehouse.gov/api/v1/blogs.json?year=2011&sort=desc
-    * http://www.whitehouse.gov/api/v1/blogs.json?topic=economy&year=2011
-* A single blog post in JSON format:
-    * http://www.whitehouse.gov/api/v1/blogs/1234.json
-* All photos (belonging to this blog post):
-    * http://www.whitehouse.gov/api/v1/blogs/1234/photos.json
+    * http://www.example.gov/api/v1/magazines.json?year=2011&sort=desc
+    * http://www.example.gov/api/v1/magazines.json?topic=economy&year=2011
+* A single magazine in JSON format:
+    * http://www.example.gov/api/v1/magazines/1234.json
+* All articles in (or belonging to) this magazine:
+    * http://www.example.gov/api/v1/magazines/1234/articles.json
+* All articles in this magazine in XML format:
+    * GET http://example.gov/api/v1/magazines/1234/articles.xml
 * Specify optional fields in a comma separated list:
-    * http://www.whitehouse.gov/api/v1/blogs/1234.json?fields=title,by,date
-* Get all signatures to a particular petition in XML format:
-    * GET http://petitions.whitehouse.gov/api/v1/petitions/1234/signatures.xml
-* Create a new signature for a particular petition:
-    * POST http://petitions.whitehouse.gov/api/v1/petitions/1234/signatures
+    * http://www.example.gov/api/v1/magazines/1234.json?fields=title,subtitle,date
+* Add a new article to a particular magazine:
+    * POST http://example.gov/api/v1/magazines/1234/articles
 
 ### Bad URL examples
 * Non-plural noun:
-    * http://www.whitehouse.gov/blog
-    * http://www.whitehouse.gov/blog/1234
-    * http://www.whitehouse.gov/photos/blog/1234
+    * http://www.example.gov/magazine
+    * http://www.example.gov/magazine/1234
+    * http://www.example.gov/publisher/magazine/1234
 * Verb in URL:
-    * http://www.whitehouse.gov/photos/blog/1234/create
+    * http://www.example.gov/magazine/1234/create
 * Filter outside of query string
-    * http://www.whitehouse.gov/blogs/2011/desc
+    * http://www.example.gov/magazines/2011/desc
 
-A good rule of thumb is, there should only be two URLs per resource. For example:
-* http://www.whitehouse.gov/blogs.json
-* http://www.whitehouse.gov/blogs/12345.json
-
-## <a id="http-verbs"></a>HTTP Verbs
+## HTTP Verbs
 
 | HTTP METHOD | POST            | GET       | PUT         | DELETE |
 | ----------- | --------------- | --------- | ----------- | ------ |
@@ -86,14 +83,16 @@ A good rule of thumb is, there should only be two URLs per resource. For example
 @todo Example from Web API Design
 
 
-## <a id="responses"></a>Responses
+## Responses
+
 @todo Add good v. bad examples below for:
+
 * no values in keys
 * no internal-specific names (e.g. "node" and "taxonomy term")
 * metadata should only contain direct properties of the response set, not properties of the members of the response set
 
 
-## <a id="error-handling"></a>Error handling
+## Error handling
 
 Error responses should include a common HTTP status code, message for the developer, message for the end-user (when appropriate), internal error code (corresponding to some specific internally determined error number), links where developers can find more info. For example:
 
@@ -103,7 +102,7 @@ Error responses should include a common HTTP status code, message for the develo
        suggestions about how to solve their problems here",
       "userMessage" : "This is a message that can be passed along to end-users, if needed.",
       "errorCode" : "444444",
-      "more info" : "http://www.whitehouse.gov/developer/path/to/help/for/444444,
+      "more info" : "http://www.example.gov/developer/path/to/help/for/444444,
        http://drupal.org/node/444444",
     }
 
@@ -113,7 +112,7 @@ Use three simple, common response codes indicating (1) success, (2) failure due 
 * 500 - Internal Server Error
 
 
-## <a id="versions"></a>Versions
+## Versions
 
 * Never release an API without a version number.
 * Versions should be integers, not decimal numbers, prefixed with ‘v’. For example:
@@ -122,11 +121,11 @@ Use three simple, common response codes indicating (1) success, (2) failure due 
 * Maintain APIs at least one version back.
 
 
-## <a id="limits-pagers"></a>Record limits / Pagers
+## Record limits
 
 * If no limit is specified, return results with a default limit.
 * To get records 50 through 75 do this:
-    * http://whitehouse.gov/examples?limit=25&offset=50
+    * http://example.gov/magazines?limit=25&offset=50
     * offset=50 means, ‘begin with record number fifty’
     * limit=25 means, ‘return 25 records’
 
@@ -146,22 +145,17 @@ Information about record limits should also be included in the Example resonse. 
         }
     }
 
-## <a id="request-response-examples"></a>Request & Response Examples
+## Request & Response Examples
 
-###Press Articles
-Retrieve – GET  whitehouse.gov/api/v1/press-articles/[id].json
+### API Resources
 
-    {
-        "id": "1234",
-        "title": "Example Title",
-        "tags": [
-            {"id": "125", "name": "Firemen"},
-            {"id": "834", "name": "Santa Claus"}
-        ],
-        "created": "1231621302"
-    }
+  - [GET /magazines](#get-magazines)
+  - [GET /magazines/[id]](#get-magazinesid)
+  - [POST /magazines/[id]/articles](#post-magazinesidarticles)
 
-Index – GET  whitehouse.gov/api/v1/press-articles
+### GET /magazines
+
+Example: http://example.gov/api/v1/magazines.json
 
     {
         "metadata": {
@@ -173,161 +167,105 @@ Index – GET  whitehouse.gov/api/v1/press-articles
         },
         "results": [
             {
-                "id": 2457,
-                "type": "press_article",
-                "title": "Example Title",
+                "id": "1234",
+                "type": "magazine",
+                "title": "Public Water Systems",
                 "tags": [
-                    {"id": "125", "name": "Firemen"},
-                    {"id": "834", "name": "Santa Claus"}
+                    {"id": "125", "name": "Environment"},
+                    {"id": "834", "name": "Water Quality"}
                 ],
                 "created": "1231621302"
             },
             {
                 "id": 2351,
-                "type": "press_article",
-                "title": "Example Title Two",
+                "type": "magazine",
+                "title": "Public Schools",
                 "tags": [
-                    {"id": "125", "name": "Firemen"},
-                    {"id": "834", "name": "Santa Claus"}
+                    {"id": "125", "name": "Elementary"},
+                    {"id": "834", "name": "Charter Schools"}
+                ],
+                "created": "126251302"
+            }
+            {
+                "id": 2351,
+                "type": "magazine",
+                "title": "Public Schools",
+                "tags": [
+                    {"id": "125", "name": "Pre-school"},
                 ],
                 "created": "126251302"
             }
         ]
     }
 
+### GET /magazines/[id]
 
-###Users
-Retrieve – GET  whitehouse.gov/api/v1/users/[uid]
-
-    {
-        "type": "user",
-        "location": {
-            "city": "Washington",
-            "state": "DC",
-            "zip": "20006"
-        },
-        "created": "1231621302"
-    }
-
-Index – GET  whitehouse.gov/api/v1/users
+Example: http://example.gov/api/v1/magazines/[id].json
 
     {
-        "metadata": {
-            "execution time": "43",
-            "resultset": {
-                "count": 123,
-                "offset": 0,
-                "limit": 10
-            }
-        },
-        "results": [
-            {
-                "type": "user",
-                "location": {
-                    "city": "Washington",
-                    "state": "DC",
-                    "zip": "20006"
-                },
-                "created": "1231621302"
-            },
-            {
-                "type": "user",
-                "location": {
-                    "city": "Washington",
-                    "state": "DC",
-                    "zip": "20006"
-                },
-                "created": "126251302"
-            }
-        ]
-    }
-
-
-###Petitions
-Retrieve – GET  petitions.whitehouse.gov/api/v1/petitions/[pid]
-
-    {
-        "id": 241237,
-        "type": "petition",
-        "title": "Example Title",
+        "id": "1234",
+        "type": "magazine",
+        "title": "Public Water Systems",
         "tags": [
-            {"id": 175, "name": "Civil Rights and Liberties"},
-            {"id": 156, "name": "Health Care"}
+            {"id": "125", "name": "Environment"},
+            {"id": "834", "name": "Water Quality"}
         ],
-        "signature count": 104512,
-        "signatures needed": 0,
-        "deadline": 0,
         "created": "1231621302"
     }
 
-Index – GET  petitions.whitehouse.gov/api/v1/petitions?created=12-17-2012
 
-##Signatures
-Create – POST  petitions.whitehouse.gov/api/v1/petitions/[pid]/signatures
 
-    {
-        "email": "drupal@acquia.com",
-        "first_name": "Drupal",
-        "last_name": "Isto",
-        "zip": 20006
-    }
+### POST /magazines/[id]/articles
 
-Retrieve – GET  petitions.whitehouse.gov/api/v1/petitions/[pid]/signatures/[sid]
+Example: Create – POST  http://example.gov/api/v1/magazines/[id]/articles
 
     {
-        "id": 2411,
-        "type": "signature",
-        "location": {
-            "city": "Washington",
-            "state": "DC",
-            "zip": "20006"
-        },
-        "created": "1231621302"
+        "title": "Raising Revenue",
+        "author_first_name": "Jane",
+        "author_last_name": "Smith",
+        "author_email": "jane.smith@example.gov",
+        "year": "2012"
+        "month": "August"
+        "day": "18"
+        "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eget ante ut augue scelerisque ornare. Aliquam tempus rhoncus quam vel luctus. Sed scelerisque fermentum fringilla. Suspendisse tincidunt nisl a metus feugiat vitae vestibulum enim vulputate. Quisque vehicula dictum elit, vitae cursus libero auctor sed. Vestibulum fermentum elementum nunc. Proin aliquam erat in turpis vehicula sit amet tristique lorem blandit. Nam augue est, bibendum et ultrices non, interdum in est. Quisque gravida orci lobortis... "
+
     }
 
-Index – GET  petitions.whitehouse.gov/api/v1/petitions/[pid]/signatures
 
-    {
-        "metadata": {
-            "execution time": "241",
-            "resultset": {
-                "count": 123,
-                "offset": 0,
-                "limit": 10
-            }
-        },
-        "results": [
-            {
-                "id": 2411,
-                "type": "signature",
-                "location": {
-                    "city": "Washington",
-                    "state": "DC",
-                    "zip": "20006"
-                },
-                "created": "1231621302"
-            },
-            {
-                "id": 2412,
-                "type": "signature",
-                "location": {
-                    "city": "Washington",
-                    "state": "DC",
-                    "zip": "20006"
-                },
-                "created": "1231621302"
-            }
-        ]
-    }
-
-### Parameters
-* createdAt=1355787118
-* createdBefore=1355787118
-* createdAfter=1355787118
-
-# <a id="mock-responses"></a>Mock Responses
+## Mock Responses
 It is suggested that each resource accept a 'mock' parameter on the testing server. Passing this parameter should return a mock data response (bypassing the backend).
 
 Implementing this feature early in development ensures that the API will exhibit consistent behavior, supporting a test driven development methodology.
 
-Note: if the mock parameter is included in a request to the production environment, an error should be raised.
+Note: If the mock parameter is included in a request to the production environment, an error should be raised.
+
+
+## JSONP
+
+JSONP is easiest explained with an example. Here's a one from [StackOverflow](http://stackoverflow.com/questions/2067472/what-is-jsonp-all-about?answertab=votes#tab-top):
+
+> Say you're on domain abc.com, and you want to make a request to domain xyz.com. To do so, you need to cross domain boundaries, a no-no in most of browserland.
+
+> The one item that bypasses this limitation is `<script>` tags. When you use a script tag, the domain limitation is ignored, but under normal circumstances, you can't really DO anything with the results, the script just gets evaluated.
+
+> Enter JSONP. When you make your request to a server that is JSONP enabled, you pass a special parameter that tells the server a little bit about your page. That way, the server is able to nicely wrap up its response in a way that your page can handle.
+
+> For example, say the server expects a parameter called "callback" to enable its JSONP capabilities. Then your request would look like:
+
+>         http://www.xyz.com/sample.aspx?callback=mycallback
+
+> Without JSONP, this might return some basic javascript object, like so:
+
+>         { foo: 'bar' }
+
+> However, with JSONP, when the server receives the "callback" parameter, it wraps up the result a little differently, returning something like this:
+
+>         mycallback({ foo: 'bar' });
+
+> As you can see, it will now invoke the method you specified. So, in your page, you define the callback function:
+
+>         mycallback = function(data){
+>             alert(data.foo);
+>         };
+
+http://stackoverflow.com/questions/2067472/what-is-jsonp-all-about?answertab=votes#tab-top
