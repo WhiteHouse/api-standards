@@ -2,16 +2,17 @@
 
 * [Guidelines](#guidelines)
 * [Pragmatic REST](#pragmatic-rest)
-* [URLs](#urls)
+* [RESTful URLs](#restful-urls)
 * [HTTP Verbs](#http-verbs)
 * [Responses](#responses)
 * [Error handling](#error-handling)
 * [Versions](#versions)
-* [Record limits / Pagers](#limits-pagers)
+* [Record limits / Pagers](#record-limits-pagers)
 * [Request & Response Examples](#request-response-examples)
 * [Mock Responses](#mock-responses)
+* [JSONP](#jsonp)
 
-## <a id="guidelines"></a>Guidelines
+## Guidelines
 
 This document provides guidelines and examples for White House Web APIs, encouraging consistency, maintainability, and best practices across applications. White House APIs aim to balance a truly RESTful API interface with a positive developer experience (DX).
 
@@ -21,7 +22,7 @@ This document borrows heavily from:
 * Web API Design, by Brian Mulloy, APIGee
 * [Fieldings Dissertation on REST](http://www.ics.uci.edu/~fielding/pubs/dissertation/top.htm)
 
-## <a id="pragmatic-rest"></a>Pragmatic REST
+## Pragmatic REST
 
 These guidelines aim to support a truly RESTful API. Here are a few exceptions:
 * Put the version number of the API in the URL (see examples below). Don’t accept any requests that do not specify a version number.
@@ -29,7 +30,7 @@ These guidelines aim to support a truly RESTful API. Here are a few exceptions:
     * http://example.gov/api/v1/magazines.json
     * http://example.gov/api/v1/magazines.xml
 
-## <a id="urls"></a>RESTful URLs
+## RESTful URLs
 
 ### General guidelines for RESTful URLs
 * A URL identifies a resource.
@@ -71,7 +72,7 @@ These guidelines aim to support a truly RESTful API. Here are a few exceptions:
 * Filter outside of query string
     * http://www.example.gov/magazines/2011/desc
 
-## <a id="http-verbs"></a>HTTP Verbs
+## HTTP Verbs
 
 | HTTP METHOD | POST            | GET       | PUT         | DELETE |
 | ----------- | --------------- | --------- | ----------- | ------ |
@@ -82,14 +83,16 @@ These guidelines aim to support a truly RESTful API. Here are a few exceptions:
 @todo Example from Web API Design
 
 
-## <a id="responses"></a>Responses
+## Responses
+
 @todo Add good v. bad examples below for:
+
 * no values in keys
 * no internal-specific names (e.g. "node" and "taxonomy term")
 * metadata should only contain direct properties of the response set, not properties of the members of the response set
 
 
-## <a id="error-handling"></a>Error handling
+## Error handling
 
 Error responses should include a common HTTP status code, message for the developer, message for the end-user (when appropriate), internal error code (corresponding to some specific internally determined error number), links where developers can find more info. For example:
 
@@ -109,7 +112,7 @@ Use three simple, common response codes indicating (1) success, (2) failure due 
 * 500 - Internal Server Error
 
 
-## <a id="versions"></a>Versions
+## Versions
 
 * Never release an API without a version number.
 * Versions should be integers, not decimal numbers, prefixed with ‘v’. For example:
@@ -118,7 +121,7 @@ Use three simple, common response codes indicating (1) success, (2) failure due 
 * Maintain APIs at least one version back.
 
 
-## <a id="limits-pagers"></a>Record limits / Pagers
+## Record limits / Pagers
 
 * If no limit is specified, return results with a default limit.
 * To get records 50 through 75 do this:
@@ -142,7 +145,7 @@ Information about record limits should also be included in the Example resonse. 
         }
     }
 
-## <a id="request-response-examples"></a>Request & Response Examples
+## Request & Response Examples
 
 ### API Resources
 
@@ -229,9 +232,11 @@ Example: Create – POST  http://example.gov/api/v1/magazines/[id]/articles
     }
 
 
-# <a id="mock-responses"></a>Mock Responses
+## Mock Responses
 It is suggested that each resource accept a 'mock' parameter on the testing server. Passing this parameter should return a mock data response (bypassing the backend).
 
 Implementing this feature early in development ensures that the API will exhibit consistent behavior, supporting a test driven development methodology.
 
 Note: if the mock parameter is included in a request to the production environment, an error should be raised.
+
+## JSONP
