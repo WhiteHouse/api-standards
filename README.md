@@ -26,8 +26,8 @@ This document borrows heavily from:
 These guidelines aim to support a truly RESTful API. Here are a few exceptions:
 * Put the version number of the API in the URL (see examples below). Don’t accept any requests that do not specify a version number.
 * Allow users to request formats like JSON or XML like this:
-    * http://whitehouse.gov/api/v1/blogs.json
-    * http://whitehouse.gov/api/v1/blogs.xml
+    * http://example.gov/api/v1/magazines.json
+    * http://example.gov/api/v1/magazines.xml
 
 ## <a id="urls"></a>RESTful URLs
 
@@ -45,35 +45,31 @@ These guidelines aim to support a truly RESTful API. Here are a few exceptions:
 * Formats should be in the form of api/v2/resource/{id}.json
 
 ### Good URL examples
-* List of blog posts:
-    * http://www.whitehouse.gov/api/v1/blogs.json
+* List of magazines:
+    * http://www.example.gov/api/v1/magazines.json
 * Filtering is a query:
-    * http://www.whitehouse.gov/api/v1/blogs.json?year=2011&sort=desc
-    * http://www.whitehouse.gov/api/v1/blogs.json?topic=economy&year=2011
-* A single blog post in JSON format:
-    * http://www.whitehouse.gov/api/v1/blogs/1234.json
-* All photos (belonging to this blog post):
-    * http://www.whitehouse.gov/api/v1/blogs/1234/photos.json
+    * http://www.example.gov/api/v1/magazines.json?year=2011&sort=desc
+    * http://www.example.gov/api/v1/magazines.json?topic=economy&year=2011
+* A single magazine in JSON format:
+    * http://www.example.gov/api/v1/magazines/1234.json
+* All articles in (or belonging to) this magazine:
+    * http://www.example.gov/api/v1/magazines/1234/articles.json
+* All articles in this magazine in XML format:
+    * GET http://example.gov/api/v1/magazines/1234/articles.xml
 * Specify optional fields in a comma separated list:
-    * http://www.whitehouse.gov/api/v1/blogs/1234.json?fields=title,by,date
-* Get all signatures to a particular petition in XML format:
-    * GET http://petitions.whitehouse.gov/api/v1/petitions/1234/signatures.xml
-* Create a new signature for a particular petition:
-    * POST http://petitions.whitehouse.gov/api/v1/petitions/1234/signatures
+    * http://www.example.gov/api/v1/magazines/1234.json?fields=title,subtitle,date
+* Add a new article to a particular magazine:
+    * POST http://example.gov/api/v1/magazines/1234/articles
 
 ### Bad URL examples
 * Non-plural noun:
-    * http://www.whitehouse.gov/blog
-    * http://www.whitehouse.gov/blog/1234
-    * http://www.whitehouse.gov/photos/blog/1234
+    * http://www.example.gov/magazine
+    * http://www.example.gov/magazine/1234
+    * http://www.example.gov/publisher/magazine/1234
 * Verb in URL:
-    * http://www.whitehouse.gov/photos/blog/1234/create
+    * http://www.example.gov/magazine/1234/create
 * Filter outside of query string
-    * http://www.whitehouse.gov/blogs/2011/desc
-
-A good rule of thumb is, there should only be two URLs per resource. For example:
-* http://www.whitehouse.gov/blogs.json
-* http://www.whitehouse.gov/blogs/12345.json
+    * http://www.example.gov/magazines/2011/desc
 
 ## <a id="http-verbs"></a>HTTP Verbs
 
@@ -103,7 +99,7 @@ Error responses should include a common HTTP status code, message for the develo
        suggestions about how to solve their problems here",
       "userMessage" : "This is a message that can be passed along to end-users, if needed.",
       "errorCode" : "444444",
-      "more info" : "http://www.whitehouse.gov/developer/path/to/help/for/444444,
+      "more info" : "http://www.example.gov/developer/path/to/help/for/444444,
        http://drupal.org/node/444444",
     }
 
@@ -126,7 +122,7 @@ Use three simple, common response codes indicating (1) success, (2) failure due 
 
 * If no limit is specified, return results with a default limit.
 * To get records 50 through 75 do this:
-    * http://whitehouse.gov/examples?limit=25&offset=50
+    * http://example.gov/magazines?limit=25&offset=50
     * offset=50 means, ‘begin with record number fifty’
     * limit=25 means, ‘return 25 records’
 
@@ -148,20 +144,15 @@ Information about record limits should also be included in the Example resonse. 
 
 ## <a id="request-response-examples"></a>Request & Response Examples
 
-###Press Articles
-Retrieve – GET  whitehouse.gov/api/v1/press-articles/[id].json
+### API Resources
 
-    {
-        "id": "1234",
-        "title": "Example Title",
-        "tags": [
-            {"id": "125", "name": "Firemen"},
-            {"id": "834", "name": "Santa Claus"}
-        ],
-        "created": "1231621302"
-    }
+  - [GET /magazines](#get-magazines)
+  - [GET /magazines/[id]](#get-magazinesid)
+  - [POST /magazines/[id]/articles](#post-magazinesidarticles)
 
-Index – GET  whitehouse.gov/api/v1/press-articles
+### GET /magazines
+
+Example: http://example.gov/api/v1/magazines.json
 
     {
         "metadata": {
@@ -173,157 +164,70 @@ Index – GET  whitehouse.gov/api/v1/press-articles
         },
         "results": [
             {
-                "id": 2457,
-                "type": "press_article",
-                "title": "Example Title",
+                "id": "1234",
+                "type": "magazine",
+                "title": "Public Water Systems",
                 "tags": [
-                    {"id": "125", "name": "Firemen"},
-                    {"id": "834", "name": "Santa Claus"}
+                    {"id": "125", "name": "Environment"},
+                    {"id": "834", "name": "Water Quality"}
                 ],
                 "created": "1231621302"
             },
             {
                 "id": 2351,
-                "type": "press_article",
-                "title": "Example Title Two",
+                "type": "magazine",
+                "title": "Public Schools",
                 "tags": [
-                    {"id": "125", "name": "Firemen"},
-                    {"id": "834", "name": "Santa Claus"}
+                    {"id": "125", "name": "Elementary"},
+                    {"id": "834", "name": "Charter Schools"}
+                ],
+                "created": "126251302"
+            }
+            {
+                "id": 2351,
+                "type": "magazine",
+                "title": "Public Schools",
+                "tags": [
+                    {"id": "125", "name": "Pre-school"},
                 ],
                 "created": "126251302"
             }
         ]
     }
 
+### GET /magazines/[id]
 
-###Users
-Retrieve – GET  whitehouse.gov/api/v1/users/[uid]
-
-    {
-        "type": "user",
-        "location": {
-            "city": "Washington",
-            "state": "DC",
-            "zip": "20006"
-        },
-        "created": "1231621302"
-    }
-
-Index – GET  whitehouse.gov/api/v1/users
+Example: http://example.gov/api/v1/magazines/[id].json
 
     {
-        "metadata": {
-            "execution time": "43",
-            "resultset": {
-                "count": 123,
-                "offset": 0,
-                "limit": 10
-            }
-        },
-        "results": [
-            {
-                "type": "user",
-                "location": {
-                    "city": "Washington",
-                    "state": "DC",
-                    "zip": "20006"
-                },
-                "created": "1231621302"
-            },
-            {
-                "type": "user",
-                "location": {
-                    "city": "Washington",
-                    "state": "DC",
-                    "zip": "20006"
-                },
-                "created": "126251302"
-            }
-        ]
-    }
-
-
-###Petitions
-Retrieve – GET  petitions.whitehouse.gov/api/v1/petitions/[pid]
-
-    {
-        "id": 241237,
-        "type": "petition",
-        "title": "Example Title",
+        "id": "1234",
+        "type": "magazine",
+        "title": "Public Water Systems",
         "tags": [
-            {"id": 175, "name": "Civil Rights and Liberties"},
-            {"id": 156, "name": "Health Care"}
+            {"id": "125", "name": "Environment"},
+            {"id": "834", "name": "Water Quality"}
         ],
-        "signature count": 104512,
-        "signatures needed": 0,
-        "deadline": 0,
         "created": "1231621302"
     }
 
-Index – GET  petitions.whitehouse.gov/api/v1/petitions?created=12-17-2012
 
-##Signatures
-Create – POST  petitions.whitehouse.gov/api/v1/petitions/[pid]/signatures
 
-    {
-        "email": "drupal@acquia.com",
-        "first_name": "Drupal",
-        "last_name": "Isto",
-        "zip": 20006
-    }
+### POST /magazines/[id]/articles
 
-Retrieve – GET  petitions.whitehouse.gov/api/v1/petitions/[pid]/signatures/[sid]
+Example: Create – POST  http://example.gov/api/v1/magazines/[id]/articles
 
     {
-        "id": 2411,
-        "type": "signature",
-        "location": {
-            "city": "Washington",
-            "state": "DC",
-            "zip": "20006"
-        },
-        "created": "1231621302"
+        "title": "Raising Revenue",
+        "author_first_name": "Jane",
+        "author_last_name": "Smith",
+        "author_email": "jane.smith@example.gov",
+        "year": "2012"
+        "month": "August"
+        "day": "18"
+        "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eget ante ut augue scelerisque ornare. Aliquam tempus rhoncus quam vel luctus. Sed scelerisque fermentum fringilla. Suspendisse tincidunt nisl a metus feugiat vitae vestibulum enim vulputate. Quisque vehicula dictum elit, vitae cursus libero auctor sed. Vestibulum fermentum elementum nunc. Proin aliquam erat in turpis vehicula sit amet tristique lorem blandit. Nam augue est, bibendum et ultrices non, interdum in est. Quisque gravida orci lobortis... "
+
     }
 
-Index – GET  petitions.whitehouse.gov/api/v1/petitions/[pid]/signatures
-
-    {
-        "metadata": {
-            "execution time": "241",
-            "resultset": {
-                "count": 123,
-                "offset": 0,
-                "limit": 10
-            }
-        },
-        "results": [
-            {
-                "id": 2411,
-                "type": "signature",
-                "location": {
-                    "city": "Washington",
-                    "state": "DC",
-                    "zip": "20006"
-                },
-                "created": "1231621302"
-            },
-            {
-                "id": 2412,
-                "type": "signature",
-                "location": {
-                    "city": "Washington",
-                    "state": "DC",
-                    "zip": "20006"
-                },
-                "created": "1231621302"
-            }
-        ]
-    }
-
-### Parameters
-* createdAt=1355787118
-* createdBefore=1355787118
-* createdAfter=1355787118
 
 # <a id="mock-responses"></a>Mock Responses
 It is suggested that each resource accept a 'mock' parameter on the testing server. Passing this parameter should return a mock data response (bypassing the backend).
