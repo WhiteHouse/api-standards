@@ -129,7 +129,7 @@ Use three simple, common response codes indicating (1) success, (2) failure due 
     * offset=50 means, ‘begin with record number fifty’
     * limit=25 means, ‘return 25 records’
 
-Information about record limits should also be included in the Example resonse. Example:
+Information about record limits should also be included in the Example response. Example:
 
     {
         "metadata": {
