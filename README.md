@@ -85,11 +85,28 @@ These guidelines aim to support a truly RESTful API. Here are a few exceptions:
 
 ## Responses
 
-@todo Add good v. bad examples below for:
+* No values in keys
+* No internal-specific names (e.g. "node" and "taxonomy term")
+* Metadata should only contain direct properties of the response set, not properties of the members of the response set
 
-* no values in keys
-* no internal-specific names (e.g. "node" and "taxonomy term")
-* metadata should only contain direct properties of the response set, not properties of the members of the response set
+### Good examples
+
+No values in keys:
+
+    "tags": [
+      {"id": "125", "name": "Environment"},
+      {"id": "834", "name": "Water Quality"}
+    ],
+
+
+### Bad examples
+
+Values in keys:
+
+    "tags": [
+      {"125": "Environment"},
+      {"834": "Water Quality"}
+    ],
 
 
 ## Error handling
