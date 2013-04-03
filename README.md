@@ -18,8 +18,8 @@ This document provides guidelines and examples for White House Web APIs, encoura
 
 This document borrows heavily from:
 * [Designing HTTP Interfaces and RESTful Web Services](http://munich2012.drupal.org/program/sessions/designing-http-interfaces-and-restful-web-services)
-* API Facade Pattern, by Brian Mulloy, APIGee
-* Web API Design, by Brian Mulloy, APIGee
+* API Facade Pattern, by Brian Mulloy, Apigee
+* Web API Design, by Brian Mulloy, Apigee
 * [Fieldings Dissertation on REST](http://www.ics.uci.edu/~fielding/pubs/dissertation/top.htm)
 
 ## Pragmatic REST
@@ -80,7 +80,7 @@ These guidelines aim to support a truly RESTful API. Here are a few exceptions:
 | /dogs       | Create new dogs | List dogs | Bulk update | Delete all dogs |
 | /dogs/1234  | Error           | Show Bo   | If exists, update Bo; If not, error | Delete Bo |
 
-@todo Example from Web API Design
+(Example from Web API Design, by Brian Mulloy, Apigee.)
 
 
 ## Responses
