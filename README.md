@@ -135,14 +135,13 @@ Information about record limits should also be included in the Example resonse. 
         "metadata": {
             "resultset": {
                 "count": 50,
-                "offset": 50,
+                "offset": 25,
                 "limit": 25
             }
         },
         "results": [
             { .. }
-          ]
-        }
+        ]
     }
 
 ## Request & Response Examples
