@@ -148,7 +148,7 @@ Use three simple, common response codes indicating (1) success, (2) failure due 
     * limit=25 means, ‘return 25 records (or fewer, if there
       aren't that many)’
 
-Information about record limits requested, and total count available, should also be included in the Example resonse. Example:
+Information about record limits requested, and total count available, should also be included in the Example response. Example:
 
     {
         "metadata": {
