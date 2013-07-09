@@ -144,15 +144,16 @@ Use three simple, common response codes indicating (1) success, (2) failure due 
 * To get records 50 through 75 do this:
     * http://example.gov/magazines?limit=25&offset=50
     * offset=50 means, ‘begin with record number fifty’
-    * limit=25 means, ‘return 25 records’
+    * limit=25 means, ‘return 25 records (or fewer, if there
+      aren't that many)’
 
-Information about record limits should also be included in the Example resonse. Example:
+Information about record limits requested, and total count available, should also be included in the Example resonse. Example:
 
     {
         "metadata": {
             "resultset": {
-                "count": 50,
-                "offset": 25,
+                "count": 227,
+                "offset": 50,
                 "limit": 25
             }
         },
@@ -211,6 +212,7 @@ Example: http://example.gov/api/v1/magazines.json
                 ],
                 "created": "126251302"
             }
+	    ...
         ]
     }
 
