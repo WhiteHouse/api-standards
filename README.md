@@ -21,7 +21,7 @@ This document borrows heavily from:
 * [Designing HTTP Interfaces and RESTful Web Services](http://munich2012.drupal.org/program/sessions/designing-http-interfaces-and-restful-web-services)
 * API Facade Pattern, by Brian Mulloy, Apigee
 * Web API Design, by Brian Mulloy, Apigee
-* [Fieldings Dissertation on REST](http://www.ics.uci.edu/~fielding/pubs/dissertation/top.htm)
+* [Fielding's Dissertation on REST](http://www.ics.uci.edu/~fielding/pubs/dissertation/top.htm)
 
 ## Pragmatic REST
 
