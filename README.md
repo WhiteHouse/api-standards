@@ -50,18 +50,18 @@ These guidelines aim to support a truly RESTful API. Here are a few exceptions:
 
 ### Good URL examples
 * List of magazines:
-    * http://www.example.gov/api/v1/magazines.json
+    * GET http://www.example.gov/api/v1/magazines.json
 * Filtering is a query:
-    * http://www.example.gov/api/v1/magazines.json?year=2011&sort=desc
-    * http://www.example.gov/api/v1/magazines.json?topic=economy&year=2011
+    * GET http://www.example.gov/api/v1/magazines.json?year=2011&sort=desc
+    * GET http://www.example.gov/api/v1/magazines.json?topic=economy&year=2011
 * A single magazine in JSON format:
-    * http://www.example.gov/api/v1/magazines/1234.json
+    * GET http://www.example.gov/api/v1/magazines/1234.json
 * All articles in (or belonging to) this magazine:
-    * http://www.example.gov/api/v1/magazines/1234/articles.json
+    * GET http://www.example.gov/api/v1/magazines/1234/articles.json
 * All articles in this magazine in XML format:
     * GET http://example.gov/api/v1/magazines/1234/articles.xml
 * Specify optional fields in a comma separated list:
-    * http://www.example.gov/api/v1/magazines/1234.json?fields=title,subtitle,date
+    * GET http://www.example.gov/api/v1/magazines/1234.json?fields=title,subtitle,date
 * Add a new article to a particular magazine:
     * POST http://example.gov/api/v1/magazines/1234/articles
 
