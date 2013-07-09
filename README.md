@@ -1,5 +1,3 @@
-This is an edit... you can remove it.
-
 # White House Web API Standards
 
 * [Guidelines](#guidelines)
