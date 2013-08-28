@@ -114,11 +114,11 @@ Values in keys:
 Error responses should include a common HTTP status code, message for the developer, message for the end-user (when appropriate), internal error code (corresponding to some specific internally determined error number), links where developers can find more info. For example:
 
     {
-      "status" : "400",
+      "status" : 400,
       "developerMessage" : "Verbose, plain language description of the problem. Provide developers
        suggestions about how to solve their problems here",
       "userMessage" : "This is a message that can be passed along to end-users, if needed.",
-      "errorCode" : "444444",
+      "errorCode" : 444444,
       "moreInfo" : "http://www.example.gov/developer/path/to/help/for/444444,
        http://drupal.org/node/444444",
     }
