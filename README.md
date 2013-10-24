@@ -141,9 +141,9 @@ Use three simple, common response codes indicating (1) success, (2) failure due 
 ## Record limits
 
 * If no limit is specified, return results with a default limit.
-* To get records 50 through 75 do this:
+* To get records 51 through 75 do this:
     * http://example.gov/magazines?limit=25&offset=50
-    * offset=50 means, ‘begin with record number fifty’
+    * offset=50 means, ‘skip the first 50 records’
     * limit=25 means, ‘return 25 records’
 
 Information about record limits should also be included in the Example resonse. Example:
