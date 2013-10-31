@@ -18,8 +18,8 @@ This document provides guidelines and examples for White House Web APIs, encoura
 
 This document borrows heavily from:
 * [Designing HTTP Interfaces and RESTful Web Services](http://munich2012.drupal.org/program/sessions/designing-http-interfaces-and-restful-web-services)
-* API Facade Pattern, by Brian Mulloy, Apigee
-* Web API Design, by Brian Mulloy, Apigee
+* [API Facade Pattern](http://apigee.com/about/content/api-fa%C3%A7ade-pattern), by Brian Mulloy, Apigee
+* [Web API Design](http://pages.apigee.com/web-api-design-ebook.html), by Brian Mulloy, Apigee
 * [Fielding's Dissertation on REST](http://www.ics.uci.edu/~fielding/pubs/dissertation/top.htm)
 
 ## Pragmatic REST
