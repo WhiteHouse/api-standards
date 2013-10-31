@@ -236,18 +236,41 @@ Example: http://example.gov/api/v1/magazines/[id].json
 
 Example: Create – POST  http://example.gov/api/v1/magazines/[id]/articles
 
+Request body:
+
+    [
+        {
+            "title": "Raising Revenue",
+            "author_first_name": "Jane",
+            "author_last_name": "Smith",
+            "author_email": "jane.smith@example.gov",
+            "year": "2012"
+            "month": "August"
+            "day": "18"
+            "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eget ante ut augue scelerisque ornare. Aliquam tempus rhoncus quam vel luctus. Sed scelerisque fermentum fringilla. Suspendisse tincidunt nisl a metus feugiat vitae vestibulum enim vulputate. Quisque vehicula dictum elit, vitae cursus libero auctor sed. Vestibulum fermentum elementum nunc. Proin aliquam erat in turpis vehicula sit amet tristique lorem blandit. Nam augue est, bibendum et ultrices non, interdum in est. Quisque gravida orci lobortis... "
+
+        }
+    ]
+
+Response body:
+
     {
-        "title": "Raising Revenue",
-        "author_first_name": "Jane",
-        "author_last_name": "Smith",
-        "author_email": "jane.smith@example.gov",
-        "year": "2012"
-        "month": "August"
-        "day": "18"
-        "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eget ante ut augue scelerisque ornare. Aliquam tempus rhoncus quam vel luctus. Sed scelerisque fermentum fringilla. Suspendisse tincidunt nisl a metus feugiat vitae vestibulum enim vulputate. Quisque vehicula dictum elit, vitae cursus libero auctor sed. Vestibulum fermentum elementum nunc. Proin aliquam erat in turpis vehicula sit amet tristique lorem blandit. Nam augue est, bibendum et ultrices non, interdum in est. Quisque gravida orci lobortis... "
-
+        "metadata": {
+            "resultset": {
+                "count": 124,
+                "offset": 124,
+                "limit": 1
+            }
+        },
+        "results": [
+            {
+                "id": "1235",
+                "type": "article",
+                "title": "Raising Revenue",
+                "created": "1231621302"
+            }
+        ]
     }
-
 
 ## Mock Responses
 It is suggested that each resource accept a 'mock' parameter on the testing server. Passing this parameter should return a mock data response (bypassing the backend).
