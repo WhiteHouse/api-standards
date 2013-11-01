@@ -174,6 +174,8 @@ Information about record limits and total available count should also be include
 
 Example: http://example.gov/api/v1/magazines.json
 
+Response body:
+
     {
         "metadata": {
             "resultset": {
@@ -219,6 +221,8 @@ Example: http://example.gov/api/v1/magazines.json
 
 Example: http://example.gov/api/v1/magazines/[id].json
 
+Response body:
+
     {
         "id": "1234",
         "type": "magazine",
@@ -236,17 +240,20 @@ Example: http://example.gov/api/v1/magazines/[id].json
 
 Example: Create – POST  http://example.gov/api/v1/magazines/[id]/articles
 
-    {
-        "title": "Raising Revenue",
-        "author_first_name": "Jane",
-        "author_last_name": "Smith",
-        "author_email": "jane.smith@example.gov",
-        "year": "2012"
-        "month": "August"
-        "day": "18"
-        "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eget ante ut augue scelerisque ornare. Aliquam tempus rhoncus quam vel luctus. Sed scelerisque fermentum fringilla. Suspendisse tincidunt nisl a metus feugiat vitae vestibulum enim vulputate. Quisque vehicula dictum elit, vitae cursus libero auctor sed. Vestibulum fermentum elementum nunc. Proin aliquam erat in turpis vehicula sit amet tristique lorem blandit. Nam augue est, bibendum et ultrices non, interdum in est. Quisque gravida orci lobortis... "
+Request body:
 
-    }
+    [
+        {
+            "title": "Raising Revenue",
+            "author_first_name": "Jane",
+            "author_last_name": "Smith",
+            "author_email": "jane.smith@example.gov",
+            "year": "2012",
+            "month": "August",
+            "day": "18",
+            "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eget ante ut augue scelerisque ornare. Aliquam tempus rhoncus quam vel luctus. Sed scelerisque fermentum fringilla. Suspendisse tincidunt nisl a metus feugiat vitae vestibulum enim vulputate. Quisque vehicula dictum elit, vitae cursus libero auctor sed. Vestibulum fermentum elementum nunc. Proin aliquam erat in turpis vehicula sit amet tristique lorem blandit. Nam augue est, bibendum et ultrices non, interdum in est. Quisque gravida orci lobortis... "
+        }
+    ]
 
 
 ## Mock Responses
