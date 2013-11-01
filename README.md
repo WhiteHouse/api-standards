@@ -8,6 +8,7 @@
 * [Error handling](#error-handling)
 * [Versions](#versions)
 * [Record limits](#record-limits)
+* [ETags](#etags)
 * [Request & Response Examples](#request-response-examples)
 * [Mock Responses](#mock-responses)
 * [JSONP](#jsonp)
@@ -161,6 +162,27 @@ Information about record limits and total available count should also be include
         },
         "results": []
     }
+    
+## ETags
+
+ETags allow clients and intermediaries to cache requests according to their unique entity id which can reduce traffic to origin servers.
+
+* Part of the metadata object.
+* Part of the HTTP Header.
+
+Documentation: http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.19
+
+Response object example:
+
+    {
+        "metadata": {
+            "etag": "xxxx-yyyy-zzzz"
+        }
+    }
+
+HTTP Header example:
+
+    etag: "xxxx-yyyy-zzzz"   
 
 ## Request & Response Examples
 
