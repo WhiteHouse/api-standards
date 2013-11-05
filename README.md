@@ -8,7 +8,7 @@
 * [Error handling](#error-handling)
 * [Versions](#versions)
 * [Record limits](#record-limits)
-* [Request & Response Examples](#request-response-examples)
+* [Request & Response Examples](#request--response-examples)
 * [Mock Responses](#mock-responses)
 * [JSONP](#jsonp)
 
