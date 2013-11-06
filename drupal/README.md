@@ -16,7 +16,7 @@ Note that when you define new CRUD operations, services will automatically expos
 Be sure that your endpoint path conforms to the Whitehouse API Standards:
 [endpoint_path] = /api/[version]/
 
-These default URL patterns neccesitate a default, corresponding argument structure. For example:
+These default URL patterns necessitate a default, corresponding argument structure. For example:
 * CREATE operations expect argument ‘source’ to be defined as ‘data’
 * UPDATE operations expect at least two arguments, one with 'source' defined as 'path', and one with 'source' defined as 'data'
 * Etc.
