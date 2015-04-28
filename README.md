@@ -114,7 +114,7 @@ Values in keys:
 
 ## Error handling
 
-Error responses should include a common HTTP status code, message for the developer, message for the end-user (when appropriate), internal error code (corresponding to some specific internally determined ID), links where developers can find more info. For example:
+Error responses should include a common HTTP status code, a message for the developer, a message for the end-user (when appropriate), an internal error code (corresponding to some specific internally determined ID), and links where developers can find more info. For example:
 
     {
       "status" : 400,
