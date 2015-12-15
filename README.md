@@ -13,58 +13,70 @@
 
 ## Guidelines
 
-This document provides guidelines and examples for White House Web APIs, encouraging consistency, maintainability, and best practices across applications. White House APIs aim to balance a truly RESTful API interface with a positive developer experience (DX).
+This document provides guidelines and examples for Biomatters Web APIs, encouraging consistency, maintainability, and best practices across applications. Biomatters APIs aim to balance a RESTy API interface with a positive developer experience.
+
+These standard are derived from the [White House' Web API standards](https://github.com/WhiteHouse/api-standards).
 
 This document borrows heavily from:
+
 * [Designing HTTP Interfaces and RESTful Web Services](https://www.youtube.com/watch?v=zEyg0TnieLg)
 * [API Facade Pattern](http://apigee.com/about/resources/ebooks/api-fa%C3%A7ade-pattern), by Brian Mulloy, Apigee
 * [Web API Design](http://pages.apigee.com/web-api-design-ebook.html), by Brian Mulloy, Apigee
 * [Fielding's Dissertation on REST](http://www.ics.uci.edu/~fielding/pubs/dissertation/top.htm)
 
-## Pragmatic REST
+## URL paths
 
-These guidelines aim to support a truly RESTful API. Here are a few exceptions:
-* Put the version number of the API in the URL (see examples below). Don’t accept any requests that do not specify a version number.
-
-## RESTful URLs
-
-### General guidelines for RESTful URLs
+### General guidelines for URL paths
 * A URL identifies a resource.
 * URLs should include nouns, not verbs.
 * Use plural nouns only for consistency (no singular nouns).
 * Use HTTP verbs (GET, POST, PUT, DELETE) to operate on the collections and elements.
-* You shouldn’t need to go deeper than resource/identifier/resource.
-* Put the version number at the base of your URL, for example http://example.com/v1/path/to/resource.
-* URL v. header:
+* You should rarely go deeper than `resource/[id]`.
+* You must not go deeper than `resource/[id]/resource`.
+* Put the version number at the base of your URL, for example "http://example.com/*v1*/resource".
+* URL vs HTTP header:
     * If it changes the logic you write to handle the response, put it in the URL.
-    * If it doesn’t change the logic for each response, like OAuth info, put it in the header.
+    * Otherwise put it in the header.  E.g.
+      * Authentication info
+      * Content type
+      * Accepted content types
 * Specify optional fields in a comma separated list.
-* Formats should be in the form of api/v2/resource/{id}
+
 
 ### Good URL examples
+
 * List of magazines:
-    * GET http://www.example.gov/api/v1/magazines
+    * `GET http://www.example.com/api/v1/magazines`
 * Filtering & sorting is in the query string:
-    * GET http://www.example.gov/api/v1/magazines?filters[year]=2011&sort=+year,-topic
-    * GET http://www.example.gov/api/v1/magazines?filters[topic]=economy&filters[year]=2011
+    * `GET http://www.example.com/api/v1/magazines?filters[year]=2011&sort=+year,-topic`
+    * `GET http://www.example.com/api/v1/magazines?filters[topic]=economy&filters[year]=2011`
+* Use `-` to exclusion and descending sort order:
+    * `GET http://www.example.com/api/v1/magazines?sort=year,-topic`
+    * `GET http://www.example.com/api/v1/magazines/1234?fields=subtitle,-date`
+* Specify fields to include or exclude, in a comma separated list:
+    * `GET http://www.example.com/api/v1/magazines/1234?fields=title,-subtitle,date`
 * A single magazine in JSON format:
-    * GET http://www.example.gov/api/v1/magazines/1234
+    * `GET http://www.example.com/api/v1/magazines/1234`
 * All articles in (or belonging to) this magazine:
-    * GET http://www.example.gov/api/v1/magazines/1234/articles
-* Specify fields to include, or exclude (with `-`), in a comma separated list:
-    * GET http://www.example.gov/api/v1/magazines/1234?fields=title,-subtitle,date
-* Add a new article to a particular magazine:
-    * POST http://example.gov/api/v1/magazines/1234/articles
+    * `GET http://www.example.com/api/v1/magazines/1234/articles`  
+      (But prefer `GET http://www.example.com/api/v1/articles?filters[magazine]=1234`)
+* Add a new article to a particular magazine (to-one relationships):
+    * `POST http://example.com/api/v1/magazines/1234/articles`  
+      (But prefer `POST http://www.example.com/api/v1/articles` including the magazine ID in the entity.)
+* No more than one identifier in the path.
+* Any identifier must immediately follow the resource type name.
+
 
 ### Bad URL examples
-* Non-plural noun:
-    * http://www.example.gov/magazine
-    * http://www.example.gov/magazine/1234
-    * http://www.example.gov/publisher/magazine/1234
+* Singular noun:
+    * `http://www.example.com/magazine`
+    * `http://www.example.com/magazine/1234`
+* Wrong order:
+    * `http://www.example.com/publisher/magazine/1234`
 * Verb in URL:
-    * http://www.example.gov/magazine/1234/create
-* Filter outside of query string
-    * http://www.example.gov/magazines/2011/desc
+    * `http://www.example.com/magazine/1234/create`
+* Filter not in the query string:
+    * `http://www.example.com/magazines/2011/desc`
 
 ## HTTP Verbs
 
@@ -152,7 +164,7 @@ Use [standard/conventional HTTP status codes](https://en.wikipedia.org/wiki/List
 
 * If no limit is specified, return results with a default limit.
 * To get records 51 through 75 do this:
-    * http://example.gov/magazines?limit=25&offset=50
+    * http://example.com/magazines?limit=25&offset=50
     * `offset=50` means skip the first 50 records
     * `limit=25` means, return a maximum of 25 records
 
@@ -179,7 +191,7 @@ Information about record limits and total available count should also be include
 
 ### GET /magazines
 
-Example: http://example.gov/api/v1/magazines
+Example: http://example.com/api/v1/magazines
 
 Response body:
 
@@ -226,7 +238,7 @@ Response body:
 
 ### GET /magazines/[id]
 
-Example: http://example.gov/api/v1/magazines/[id]
+Example: http://example.com/api/v1/magazines/[id]
 
 Response body:
 
@@ -245,7 +257,7 @@ Response body:
 
 ### POST /magazines/[id]/articles
 
-Example: Create – POST http://example.gov/api/v1/magazines/[id]/articles
+Example: Create – POST http://example.com/api/v1/magazines/[id]/articles
 
 Request body:
 
@@ -254,7 +266,7 @@ Request body:
             "title": "Raising Revenue",
             "author_first_name": "Jane",
             "author_last_name": "Smith",
-            "author_email": "jane.smith@example.gov",
+            "author_email": "jane.smith@example.com",
             "year": "2012",
             "month": "August",
             "day": "18",
