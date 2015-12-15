@@ -17,6 +17,8 @@ This document provides guidelines and examples for Biomatters Web APIs, encourag
 
 These standard are derived from the [White House' Web API standards](https://github.com/WhiteHouse/api-standards).
 
+Only support JSON (for now at least).  If we ever support different content types, use the `Accept` HTTP header.
+
 This document borrows heavily from:
 
 * [Designing HTTP Interfaces and RESTful Web Services](https://www.youtube.com/watch?v=zEyg0TnieLg)
@@ -29,6 +31,7 @@ This document borrows heavily from:
 ### General guidelines for URL paths
 * A URL identifies a resource.
 * URLs should include nouns, not verbs.
+* Resources type names with multiple words should be separated with dashes. No camel case or underscores.  E.g. "password-tokens" not "passwordTokens" nor "password_tokens".
 * Use plural nouns only for consistency (no singular nouns).
 * Use HTTP verbs (GET, POST, PUT, DELETE) to operate on the collections and elements.
 * You should rarely go deeper than `resource/[id]`.
