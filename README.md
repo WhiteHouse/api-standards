@@ -60,9 +60,9 @@ This document borrows heavily from:
 * All articles in (or belonging to) this magazine:
     * `GET http://www.example.com/api/v1/magazines/1234/articles`  
       (But prefer `GET http://www.example.com/api/v1/articles?filters[magazine]=1234`)
-* Add a new article to a particular magazine (to-one relationships):
+* Create a new article and add it to a particular magazine:
     * `POST http://example.com/api/v1/magazines/1234/articles`  
-      (But prefer `POST http://www.example.com/api/v1/articles` including the magazine ID in the entity.)
+      (But prefer `POST http://www.example.com/api/v1/articles` including the magazine ID as a property of the entity.)
 * No more than one identifier in the path.
 * Any identifier must immediately follow the resource type name.
 
@@ -262,7 +262,6 @@ Example: Create – POST http://example.com/api/v1/magazines/[id]/articles
 
 Request body:
 
-    [
         {
             "title": "Raising Revenue",
             "author_first_name": "Jane",
@@ -273,12 +272,3 @@ Request body:
             "day": "18",
             "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eget ante ut augue scelerisque ornare. Aliquam tempus rhoncus quam vel luctus. Sed scelerisque fermentum fringilla. Suspendisse tincidunt nisl a metus feugiat vitae vestibulum enim vulputate. Quisque vehicula dictum elit, vitae cursus libero auctor sed. Vestibulum fermentum elementum nunc. Proin aliquam erat in turpis vehicula sit amet tristique lorem blandit. Nam augue est, bibendum et ultrices non, interdum in est. Quisque gravida orci lobortis... "
         }
-    ]
-
-
-## Mock Responses
-It is suggested that each resource accept a 'mock' parameter on the testing server. Passing this parameter should return a mock data response (bypassing the backend).
-
-Implementing this feature early in development ensures that the API will exhibit consistent behavior, supporting a test driven development methodology.
-
-Note: If the mock parameter is included in a request to the production environment, an error should be raised.
