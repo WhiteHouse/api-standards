@@ -121,7 +121,7 @@ Values in keys:
 
 ## Error handling
 
-Error responses must include an internal error code and a user-friendly message.  It may contain more detail in a "payload" property, which must be an object.
+Error responses (400-599 status codes) must not have `results`.  Error responses must include an internal error code and a user-friendly message.  It may contain more detail in a "payload" property, which must be an object.
 
 For example:
 
@@ -131,6 +131,7 @@ For example:
     }
 
 Or:
+
     {
       "code": "csrf",
       "message": "The CSRF token has expired.
@@ -164,7 +165,7 @@ Use [standard/conventional HTTP status codes](https://en.wikipedia.org/wiki/List
 
 * If no limit is specified, return results with a default limit.
 * To get records 51 through 75 do this:
-    * http://example.com/magazines?limit=25&offset=50
+    * `http://example.com/magazines?limit=25&offset=50`
     * `offset=50` means skip the first 50 records
     * `limit=25` means, return a maximum of 25 records
 
