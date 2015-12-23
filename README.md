@@ -96,35 +96,41 @@ The action taken on the representation will be contextual to the media type bein
 
 No values in keys:
 
-    "tags": [
-      {"id": "125", "name": "Environment"},
-      {"id": "834", "name": "Water Quality"}
-    ],
+```json
+"tags": [
+   {"id": "125", "name": "Environment"},
+   {"id": "834", "name": "Water Quality"}
+],
+```
 
 
 ### Bad examples
 
 Values in keys:
 
-    "tags": [
-      {"125": "Environment"},
-      {"834": "Water Quality"}
-    ],
+```json
+"tags": [
+  {"125": "Environment"},
+  {"834": "Water Quality"}
+],
+```
 
 
 ## Error handling
 
 Error responses should include a common HTTP status code, message for the developer, message for the end-user (when appropriate), internal error code (corresponding to some specific internally determined ID), links where developers can find more info. For example:
 
-    {
-      "status" : 400,
-      "developerMessage" : "Verbose, plain language description of the problem. Provide developers
-       suggestions about how to solve their problems here",
-      "userMessage" : "This is a message that can be passed along to end-users, if needed.",
-      "errorCode" : "444444",
-      "moreInfo" : "http://www.example.gov/developer/path/to/help/for/444444,
-       http://drupal.org/node/444444",
-    }
+```json
+{
+  "status" : 400,
+  "developerMessage" : "Verbose, plain language description of the problem. Provide developers
+   suggestions about how to solve their problems here",
+  "userMessage" : "This is a message that can be passed along to end-users, if needed.",
+  "errorCode" : "444444",
+  "moreInfo" : "http://www.example.gov/developer/path/to/help/for/444444,
+   http://drupal.org/node/444444",
+}
+```
 
 Use three simple, common response codes indicating (1) success, (2) failure due to client-side problem, (3) failure due to server-side problem:
 * 200 - OK
@@ -151,16 +157,18 @@ Use three simple, common response codes indicating (1) success, (2) failure due 
 
 Information about record limits and total available count should also be included in the response. Example:
 
-    {
-        "metadata": {
-            "resultset": {
-                "count": 227,
-                "offset": 25,
-                "limit": 25
-            }
-        },
-        "results": []
-    }
+```json
+{
+    "metadata": {
+        "resultset": {
+            "count": 227,
+            "offset": 25,
+            "limit": 25
+        }
+    },
+    "results": []
+}
+```
 
 ## Request & Response Examples
 
@@ -176,46 +184,48 @@ Example: http://example.gov/api/v1/magazines.json
 
 Response body:
 
-    {
-        "metadata": {
-            "resultset": {
-                "count": 123,
-                "offset": 0,
-                "limit": 10
-            }
+```json
+{
+    "metadata": {
+        "resultset": {
+            "count": 123,
+            "offset": 0,
+            "limit": 10
+        }
+    },
+    "results": [
+        {
+            "id": "1234",
+            "type": "magazine",
+            "title": "Public Water Systems",
+            "tags": [
+                {"id": "125", "name": "Environment"},
+                {"id": "834", "name": "Water Quality"}
+            ],
+            "created": "1231621302"
         },
-        "results": [
-            {
-                "id": "1234",
-                "type": "magazine",
-                "title": "Public Water Systems",
-                "tags": [
-                    {"id": "125", "name": "Environment"},
-                    {"id": "834", "name": "Water Quality"}
-                ],
-                "created": "1231621302"
-            },
-            {
-                "id": 2351,
-                "type": "magazine",
-                "title": "Public Schools",
-                "tags": [
-                    {"id": "125", "name": "Elementary"},
-                    {"id": "834", "name": "Charter Schools"}
-                ],
-                "created": "126251302"
-            }
-            {
-                "id": 2351,
-                "type": "magazine",
-                "title": "Public Schools",
-                "tags": [
-                    {"id": "125", "name": "Pre-school"},
-                ],
-                "created": "126251302"
-            }
-        ]
-    }
+        {
+            "id": 2351,
+            "type": "magazine",
+            "title": "Public Schools",
+            "tags": [
+                {"id": "125", "name": "Elementary"},
+                {"id": "834", "name": "Charter Schools"}
+            ],
+            "created": "126251302"
+        }
+        {
+            "id": 2351,
+            "type": "magazine",
+            "title": "Public Schools",
+            "tags": [
+                {"id": "125", "name": "Pre-school"},
+            ],
+            "created": "126251302"
+        }
+    ]
+}
+```
 
 ### GET /magazines/[id]
 
@@ -223,16 +233,18 @@ Example: http://example.gov/api/v1/magazines/[id].json
 
 Response body:
 
-    {
-        "id": "1234",
-        "type": "magazine",
-        "title": "Public Water Systems",
-        "tags": [
-            {"id": "125", "name": "Environment"},
-            {"id": "834", "name": "Water Quality"}
-        ],
-        "created": "1231621302"
-    }
+```json
+{
+    "id": "1234",
+    "type": "magazine",
+    "title": "Public Water Systems",
+    "tags": [
+        {"id": "125", "name": "Environment"},
+        {"id": "834", "name": "Water Quality"}
+    ],
+    "created": "1231621302"
+}
+```
 
 
 
@@ -242,18 +254,20 @@ Example: Create – POST  http://example.gov/api/v1/magazines/[id]/articles
 
 Request body:
 
-    [
-        {
-            "title": "Raising Revenue",
-            "author_first_name": "Jane",
-            "author_last_name": "Smith",
-            "author_email": "jane.smith@example.gov",
-            "year": "2012",
-            "month": "August",
-            "day": "18",
-            "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eget ante ut augue scelerisque ornare. Aliquam tempus rhoncus quam vel luctus. Sed scelerisque fermentum fringilla. Suspendisse tincidunt nisl a metus feugiat vitae vestibulum enim vulputate. Quisque vehicula dictum elit, vitae cursus libero auctor sed. Vestibulum fermentum elementum nunc. Proin aliquam erat in turpis vehicula sit amet tristique lorem blandit. Nam augue est, bibendum et ultrices non, interdum in est. Quisque gravida orci lobortis... "
-        }
-    ]
+```json
+[
+    {
+        "title": "Raising Revenue",
+        "author_first_name": "Jane",
+        "author_last_name": "Smith",
+        "author_email": "jane.smith@example.gov",
+        "year": "2012",
+        "month": "August",
+        "day": "18",
+        "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eget ante ut augue scelerisque ornare. Aliquam tempus rhoncus quam vel luctus. Sed scelerisque fermentum fringilla. Suspendisse tincidunt nisl a metus feugiat vitae vestibulum enim vulputate. Quisque vehicula dictum elit, vitae cursus libero auctor sed. Vestibulum fermentum elementum nunc. Proin aliquam erat in turpis vehicula sit amet tristique lorem blandit. Nam augue est, bibendum et ultrices non, interdum in est. Quisque gravida orci lobortis... "
+    }
+]
+```
 
 
 ## Mock Responses
@@ -276,20 +290,25 @@ JSONP is easiest explained with an example. Here's one from [StackOverflow](http
 
 > For example, say the server expects a parameter called "callback" to enable its JSONP capabilities. Then your request would look like:
 
->         http://www.xyz.com/sample.aspx?callback=mycallback
+>        http://www.xyz.com/sample.aspx?callback=mycallback
 
 > Without JSONP, this might return some basic javascript object, like so:
 
->         { foo: 'bar' }
+> ```js
+> { foo: 'bar' }
+> ```
 
 > However, with JSONP, when the server receives the "callback" parameter, it wraps up the result a little differently, returning something like this:
 
->         mycallback({ foo: 'bar' });
+> ```js
+> mycallback({ foo: 'bar' });
+> ```
 
 > As you can see, it will now invoke the method you specified. So, in your page, you define the callback function:
 
->         mycallback = function(data){
->             alert(data.foo);
->         };
+> ```js
+>   mycallback = function(data){
+>       alert(data.foo);
+>   };
 
 http://stackoverflow.com/questions/2067472/what-is-jsonp-all-about?answertab=votes#tab-top
