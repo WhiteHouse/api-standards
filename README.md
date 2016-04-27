@@ -1,4 +1,4 @@
-# White House Web API Standards
+# Biomatters Web API Standards
 
 * [Guidelines](#guidelines)
 * [Pragmatic REST](#pragmatic-rest)
@@ -10,87 +10,97 @@
 * [Record limits](#record-limits)
 * [Request & Response Examples](#request--response-examples)
 * [Mock Responses](#mock-responses)
-* [JSONP](#jsonp)
 
 ## Guidelines
 
-This document provides guidelines and examples for White House Web APIs, encouraging consistency, maintainability, and best practices across applications. White House APIs aim to balance a truly RESTful API interface with a positive developer experience (DX).
+This document provides guidelines and examples for Biomatters Web APIs, encouraging consistency, maintainability, and best practices across applications. Biomatters APIs aim to balance a RESTy API interface with a positive developer experience.
+
+These standard are derived from the [White House' Web API standards](https://github.com/WhiteHouse/api-standards).
+
+Only support JSON (for now at least).  If we ever support different content types, use the `Accept` HTTP header.
 
 This document borrows heavily from:
+
 * [Designing HTTP Interfaces and RESTful Web Services](https://www.youtube.com/watch?v=zEyg0TnieLg)
 * [API Facade Pattern](http://apigee.com/about/resources/ebooks/api-fa%C3%A7ade-pattern), by Brian Mulloy, Apigee
 * [Web API Design](http://pages.apigee.com/web-api-design-ebook.html), by Brian Mulloy, Apigee
 * [Fielding's Dissertation on REST](http://www.ics.uci.edu/~fielding/pubs/dissertation/top.htm)
 
-## Pragmatic REST
+## URL paths
 
-These guidelines aim to support a truly RESTful API. Here are a few exceptions:
-* Put the version number of the API in the URL (see examples below). Don’t accept any requests that do not specify a version number.
-* Allow users to request formats like JSON or XML like this:
-    * http://example.gov/api/v1/magazines.json
-    * http://example.gov/api/v1/magazines.xml
-
-## RESTful URLs
-
-### General guidelines for RESTful URLs
+### General guidelines for URL paths
 * A URL identifies a resource.
 * URLs should include nouns, not verbs.
+* Resources type names with multiple words should be separated with dashes. No camel case or underscores.  E.g. "password-tokens" not "passwordTokens" nor "password_tokens".
 * Use plural nouns only for consistency (no singular nouns).
 * Use HTTP verbs (GET, POST, PUT, DELETE) to operate on the collections and elements.
-* You shouldn’t need to go deeper than resource/identifier/resource.
-* Put the version number at the base of your URL, for example http://example.com/v1/path/to/resource.
-* URL v. header:
+* You should rarely go deeper than `resource/[id]`.
+* You must not go deeper than `resource/[id]/resource`.
+* Put the version number at the base of your URL, for example "http://example.com/*v1*/resource".
+* URL vs HTTP header:
     * If it changes the logic you write to handle the response, put it in the URL.
-    * If it doesn’t change the logic for each response, like OAuth info, put it in the header.
+    * Otherwise put it in the header.  E.g.
+      * Authentication info
+      * Content type
+      * Accepted content types
 * Specify optional fields in a comma separated list.
-* Formats should be in the form of api/v2/resource/{id}.json
+
 
 ### Good URL examples
+
 * List of magazines:
-    * GET http://www.example.gov/api/v1/magazines.json
-* Filtering is a query:
-    * GET http://www.example.gov/api/v1/magazines.json?year=2011&sort=desc
-    * GET http://www.example.gov/api/v1/magazines.json?topic=economy&year=2011
+    * `GET http://www.example.com/api/v1/magazines`
+* Filtering & sorting is in the query string:
+    * `GET http://www.example.com/api/v1/magazines?filters[year]=2011&sort=+year,-topic`
+    * `GET http://www.example.com/api/v1/magazines?filters[topic]=economy&filters[year]=2011`
+* Use `-` to exclusion and descending sort order:
+    * `GET http://www.example.com/api/v1/magazines?sort=year,-topic`
+    * `GET http://www.example.com/api/v1/magazines/1234?fields=subtitle,-date`
+* Specify fields to include or exclude, in a comma separated list:
+    * `GET http://www.example.com/api/v1/magazines/1234?fields=title,-subtitle,date`
 * A single magazine in JSON format:
-    * GET http://www.example.gov/api/v1/magazines/1234.json
+    * `GET http://www.example.com/api/v1/magazines/1234`
 * All articles in (or belonging to) this magazine:
-    * GET http://www.example.gov/api/v1/magazines/1234/articles.json
-* All articles in this magazine in XML format:
-    * GET http://example.gov/api/v1/magazines/1234/articles.xml
-* Specify optional fields in a comma separated list:
-    * GET http://www.example.gov/api/v1/magazines/1234.json?fields=title,subtitle,date
-* Add a new article to a particular magazine:
-    * POST http://example.gov/api/v1/magazines/1234/articles
+    * `GET http://www.example.com/api/v1/magazines/1234/articles`  
+      (But prefer `GET http://www.example.com/api/v1/articles?filters[magazine]=1234`)
+* Create a new article and add it to a particular magazine:
+    * `POST http://example.com/api/v1/magazines/1234/articles`  
+      (But prefer `POST http://www.example.com/api/v1/articles` including the magazine ID as a property of the entity.)
+* No more than one identifier in the path.
+* Any identifier must immediately follow the resource type name.
+
 
 ### Bad URL examples
-* Non-plural noun:
-    * http://www.example.gov/magazine
-    * http://www.example.gov/magazine/1234
-    * http://www.example.gov/publisher/magazine/1234
+* Singular noun:
+    * `http://www.example.com/magazine`
+    * `http://www.example.com/magazine/1234`
+* Wrong order:
+    * `http://www.example.com/publisher/magazine/1234`
 * Verb in URL:
-    * http://www.example.gov/magazine/1234/create
-* Filter outside of query string
-    * http://www.example.gov/magazines/2011/desc
+    * `http://www.example.com/magazine/1234/create`
+* Filter not in the query string:
+    * `http://www.example.com/magazines/2011/desc`
 
 ## HTTP Verbs
 
 HTTP verbs, or methods, should be used in compliance with their definitions under the [HTTP/1.1](http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html) standard.
-The action taken on the representation will be contextual to the media type being worked on and its current state. Here's an example of how HTTP verbs map to create, read, update, delete operations in a particular context:
+The action taken on the representation will be contextual to the media type being worked on and its current state. Here's an example of how HTTP verbs map to create, read, update, delete operations in a particular context.  Where "Bo" is a dog with id `1234`:
 
-| HTTP METHOD | POST            | GET       | PUT         | DELETE |
-| ----------- | --------------- | --------- | ----------- | ------ |
-| CRUD OP     | CREATE          | READ      | UPDATE      | DELETE |
-| /dogs       | Create new dogs | List dogs | Bulk update | Delete all dogs |
-| /dogs/1234  | Error           | Show Bo   | If exists, update Bo; If not, error | Delete Bo |
+| HTTP METHOD | POST             | GET       | PUT         | DELETE |
+| ----------- | ---------------- | --------- | ----------- | ------ |
+| CRUD OP     | CREATE           | READ      | UPDATE      | DELETE |
+| /dogs       | Create a new dog | List dogs | Bulk update | Error  |
+| /dogs/1234  | Error            | Show Bo   | Update Bo (if exists) | Delete Bo |
 
-(Example from Web API Design, by Brian Mulloy, Apigee.)
+POST creates a new entity.  PUT updates existing entities, including any of the entity's relationships (but not the related entities themselves).
+
+The web API may implement any of these.  It does not need to implement all of them.
 
 
 ## Responses
 
 * No values in keys
-* No internal-specific names (e.g. "node" and "taxonomy term")
-* Metadata should only contain direct properties of the response set, not properties of the members of the response set
+* `metadata` should only contain direct properties of the response set, not properties of the members of the response set.
 
 ### Good examples
 
@@ -114,22 +124,35 @@ Values in keys:
 
 ## Error handling
 
-Error responses should include a common HTTP status code, message for the developer, message for the end-user (when appropriate), internal error code (corresponding to some specific internally determined ID), links where developers can find more info. For example:
+Error responses (400-599 status codes) must not have `results`.  Error responses must include an internal error code and a user-friendly message.  It may contain more detail in a "payload" property, which must be an object.
+
+For example:
 
     {
-      "status" : 400,
-      "developerMessage" : "Verbose, plain language description of the problem. Provide developers
-       suggestions about how to solve their problems here",
-      "userMessage" : "This is a message that can be passed along to end-users, if needed.",
-      "errorCode" : "444444",
-      "moreInfo" : "http://www.example.gov/developer/path/to/help/for/444444,
-       http://drupal.org/node/444444",
+      "code": "csrf",
+      "message": "The CSRF token has expired.
     }
 
-Use three simple, common response codes indicating (1) success, (2) failure due to client-side problem, (3) failure due to server-side problem:
-* 200 - OK
-* 400 - Bad Request
-* 500 - Internal Server Error
+Or:
+
+    {
+      "code": "csrf",
+      "message": "The CSRF token has expired.
+      "payload: {
+         validationErrors: [
+            {
+               "name": "email",
+               "message": "The email address is not valid."
+            }
+         ]
+      }
+    }
+
+Use [standard/conventional HTTP status codes](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes). Generally;
+
+* 200-299: OK
+* 400-499: Bad Request, client error 
+* 500-599: Internal server error
 
 
 ## Versions
@@ -141,19 +164,19 @@ Use three simple, common response codes indicating (1) success, (2) failure due 
 * Maintain APIs at least one version back.
 
 
-## Record limits
+## Pagination
 
 * If no limit is specified, return results with a default limit.
 * To get records 51 through 75 do this:
-    * http://example.gov/magazines?limit=25&offset=50
-    * offset=50 means, ‘skip the first 50 records’
-    * limit=25 means, ‘return a maximum of 25 records’
+    * `http://example.com/magazines?limit=25&offset=50`
+    * `offset=50` means skip the first 50 records
+    * `limit=25` means, return a maximum of 25 records
 
 Information about record limits and total available count should also be included in the response. Example:
 
     {
         "metadata": {
-            "resultset": {
+            "resultSet": {
                 "count": 227,
                 "offset": 25,
                 "limit": 25
@@ -172,7 +195,7 @@ Information about record limits and total available count should also be include
 
 ### GET /magazines
 
-Example: http://example.gov/api/v1/magazines.json
+Example: http://example.com/api/v1/magazines
 
 Response body:
 
@@ -219,7 +242,7 @@ Response body:
 
 ### GET /magazines/[id]
 
-Example: http://example.gov/api/v1/magazines/[id].json
+Example: http://example.com/api/v1/magazines/[id]
 
 Response body:
 
@@ -238,58 +261,17 @@ Response body:
 
 ### POST /magazines/[id]/articles
 
-Example: Create – POST  http://example.gov/api/v1/magazines/[id]/articles
+Example: Create – POST http://example.com/api/v1/magazines/[id]/articles
 
 Request body:
 
-    [
         {
             "title": "Raising Revenue",
             "author_first_name": "Jane",
             "author_last_name": "Smith",
-            "author_email": "jane.smith@example.gov",
+            "author_email": "jane.smith@example.com",
             "year": "2012",
             "month": "August",
             "day": "18",
             "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eget ante ut augue scelerisque ornare. Aliquam tempus rhoncus quam vel luctus. Sed scelerisque fermentum fringilla. Suspendisse tincidunt nisl a metus feugiat vitae vestibulum enim vulputate. Quisque vehicula dictum elit, vitae cursus libero auctor sed. Vestibulum fermentum elementum nunc. Proin aliquam erat in turpis vehicula sit amet tristique lorem blandit. Nam augue est, bibendum et ultrices non, interdum in est. Quisque gravida orci lobortis... "
         }
-    ]
-
-
-## Mock Responses
-It is suggested that each resource accept a 'mock' parameter on the testing server. Passing this parameter should return a mock data response (bypassing the backend).
-
-Implementing this feature early in development ensures that the API will exhibit consistent behavior, supporting a test driven development methodology.
-
-Note: If the mock parameter is included in a request to the production environment, an error should be raised.
-
-
-## JSONP
-
-JSONP is easiest explained with an example. Here's one from [StackOverflow](http://stackoverflow.com/questions/2067472/what-is-jsonp-all-about?answertab=votes#tab-top):
-
-> Say you're on domain abc.com, and you want to make a request to domain xyz.com. To do so, you need to cross domain boundaries, a no-no in most of browserland.
-
-> The one item that bypasses this limitation is `<script>` tags. When you use a script tag, the domain limitation is ignored, but under normal circumstances, you can't really DO anything with the results, the script just gets evaluated.
-
-> Enter JSONP. When you make your request to a server that is JSONP enabled, you pass a special parameter that tells the server a little bit about your page. That way, the server is able to nicely wrap up its response in a way that your page can handle.
-
-> For example, say the server expects a parameter called "callback" to enable its JSONP capabilities. Then your request would look like:
-
->         http://www.xyz.com/sample.aspx?callback=mycallback
-
-> Without JSONP, this might return some basic javascript object, like so:
-
->         { foo: 'bar' }
-
-> However, with JSONP, when the server receives the "callback" parameter, it wraps up the result a little differently, returning something like this:
-
->         mycallback({ foo: 'bar' });
-
-> As you can see, it will now invoke the method you specified. So, in your page, you define the callback function:
-
->         mycallback = function(data){
->             alert(data.foo);
->         };
-
-http://stackoverflow.com/questions/2067472/what-is-jsonp-all-about?answertab=votes#tab-top
