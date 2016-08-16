@@ -26,4 +26,4 @@ These default URL patterns necessitate a default, corresponding argument structu
 * [Posting data to a services endpoint](http://drupal.org/node/1334758)
 
 [services]: http://drupal.org/project/services
-[hsr]: http://drupalcontrib.org/api/drupal/contributions!services!services.services.api.php/function/hook_services_resources/7
+[hsr]: http://www.drupalcontrib.org/api/drupal/contributions%21services%21docs%21services.services.api.php/function/hook_services_resources/7
