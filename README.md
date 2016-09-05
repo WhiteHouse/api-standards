@@ -126,10 +126,35 @@ Error responses should include a common HTTP status code, message for the develo
        http://drupal.org/node/444444",
     }
 
-Use three simple, common response codes indicating (1) success, (2) failure due to client-side problem, (3) failure due to server-side problem:
-* 200 - OK
-* 400 - Bad Request
-* 500 - Internal Server Error
+It is recommended to use a standard Descriptive Error Format such as [JSON API's error format](http://jsonapi.org/format/#errors), [error.vnd](https://github.com/blongden/vnd.error), or Google Errors.
+
+###HTTP Status Codes
+
+Use [standard HTTP Status Codes](https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) to return the status of the API call, ranging from successful, to redirects, to client/ server errors.  This provides critical information to the client including the category of error (the first # of the response) as well as the exact action that was taken.  This information becomes extremely important in telling the client what to expect, or what actions are needed on the clients end.
+
+Some of the more popular, standard HTTP Status Codes are:
+
+| STATUS CODE | USE WHEN |
+| ----------- | ---------- |
+| **2XX** | **SUCCESSFUL** |
+| 200 | Ok, or Updated (but not created) |
+| 201 | Created - this is important to inform the client of an object creation, especially when such action may not be anticipated by the user (ie using a PUT) |
+| 202 | Accepted - but the action has not yet been completed.  For example, batch transactions, deletes, or items that require additional processing time by the server |
+| 204 | No content returned (common with a delete) |
+| **3XX** | **REDIRECTION/ NOT MODIFIED** |
+| 301 | Resource moved permanently and urls should be updated |
+| 304 | The resource has not been modified since the last version requested - as such there is no need to call the resource again | 
+| 303/ 307 | The resource has been moved temporarily |
+| **4XX** | **CLIENT ERROR** |
+| 400 | Bad request (malformed) made by client |
+| 401 | Unauthorized - client authentication for this resource has failed |
+| 403 | Forbidden - authorized client does not have permissions to do this |
+| 404 | Resource cannot be found, did not previously exist (status code 410), and may be available in the future |
+| 405 | HTTP Method requested is not allowed (ie trying to call a DELETE on a COLLECTION) |
+| 415 | Content-Type/ Media-Type not allowed (trying to access XML when only JSON is supported) |
+| 429 | The client has made too many requests |
+| **5XX** | **SERVER ERROR** |
+| 500 | An error occurred on the server side and the request could not be successfully processed |
 
 
 ## Versions
