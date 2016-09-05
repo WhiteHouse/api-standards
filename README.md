@@ -153,6 +153,8 @@ Some of the more popular, standard HTTP Status Codes are:
 | 405 | HTTP Method requested is not allowed (ie trying to call a DELETE on a COLLECTION) |
 | 415 | Content-Type/ Media-Type not allowed (trying to access XML when only JSON is supported) |
 | 429 | The client has made too many requests |
+| **5XX** | **SERVER ERROR** |
+| 500 | An error occurred on the server side and the request could not be successfully processed |
 
 
 ## Versions
