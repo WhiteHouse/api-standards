@@ -131,6 +131,14 @@ Use three simple, common response codes indicating (1) success, (2) failure due 
 * 400 - Bad Request
 * 500 - Internal Server Error
 
+Note: Do not confuse the status codes contained in the HTTP header with those contained in the REST response bodies--they have distinct meanings. The HTTP status header refers to the _web_ server's ability to find and serve the requested _URL_. The REST "status" value refers to the _REST_ server's ability find and serve the requested _resource_. The two may not be the same for a given request, as exemplified below:
+
+| Request  | HTTP Status Header | REST "status" Value |
+| -------- | ------------------ | ------------------- |
+| http://example.gov/api/v1/dogs.json | 200 OK | 200 |
+| http://example.gov/api/v1/dogs.json?breed=shetland-pony | 200 OK | 400 |
+| http://example.gov/asdf.json | 404 Not Found | N/A |
+
 
 ## Versions
 
