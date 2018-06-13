@@ -1,4 +1,4 @@
-# White House Web API Standards
+# Kudobuzz Api Standards
 
 * [Guidelines](#guidelines)
 * [Pragmatic REST](#pragmatic-rest)
