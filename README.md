@@ -1,4 +1,4 @@
-# White House Web API Standards
+# Kudobuzz Api Standards
 
 * [Guidelines](#guidelines)
 * [Pragmatic REST](#pragmatic-rest)
@@ -9,12 +9,10 @@
 * [Versions](#versions)
 * [Record limits](#record-limits)
 * [Request & Response Examples](#request--response-examples)
-* [Mock Responses](#mock-responses)
-* [JSONP](#jsonp)
 
 ## Guidelines
 
-This document provides guidelines and examples for White House Web APIs, encouraging consistency, maintainability, and best practices across applications. White House APIs aim to balance a truly RESTful API interface with a positive developer experience (DX).
+This document provides guidelines and examples for Kudobuzz APIs, encouraging consistency, maintainability, and best practices across services. Our APIs aim to balance a truly RESTful API interface with a positive developer experience (DX).
 
 This document borrows heavily from:
 * [Designing HTTP Interfaces and RESTful Web Services](https://www.youtube.com/watch?v=zEyg0TnieLg)
@@ -26,9 +24,6 @@ This document borrows heavily from:
 
 These guidelines aim to support a truly RESTful API. Here are a few exceptions:
 * Put the version number of the API in the URL (see examples below). Don’t accept any requests that do not specify a version number.
-* Allow users to request formats like JSON or XML like this:
-    * http://example.gov/api/v1/magazines.json
-    * http://example.gov/api/v1/magazines.xml
 
 ## RESTful URLs
 
@@ -38,27 +33,25 @@ These guidelines aim to support a truly RESTful API. Here are a few exceptions:
 * Use plural nouns only for consistency (no singular nouns).
 * Use HTTP verbs (GET, POST, PUT, DELETE) to operate on the collections and elements.
 * You shouldn’t need to go deeper than resource/identifier/resource.
-* Put the version number at the base of your URL, for example http://example.com/v1/path/to/resource.
+* Put the version number at the base of your URL, for example http://example.com/v1/path/to/resource
 * URL v. header:
     * If it changes the logic you write to handle the response, put it in the URL.
     * If it doesn’t change the logic for each response, like OAuth info, put it in the header.
 * Specify optional fields in a comma separated list.
-* Formats should be in the form of api/v2/resource/{id}.json
+* Formats should be in the form of api/v2/resource/{id}
 
 ### Good URL examples
 * List of magazines:
-    * GET http://www.example.gov/api/v1/magazines.json
+    * GET http://www.example.gov/api/v1/magazines
 * Filtering is a query:
-    * GET http://www.example.gov/api/v1/magazines.json?year=2011&sort=desc
-    * GET http://www.example.gov/api/v1/magazines.json?topic=economy&year=2011
+    * GET http://www.example.gov/api/v1/magazines?year=2011&sort=desc
+    * GET http://www.example.gov/api/v1/magazines?topic=economy&year=2011
 * A single magazine in JSON format:
-    * GET http://www.example.gov/api/v1/magazines/1234.json
+    * GET http://www.example.gov/api/v1/magazines/1234
 * All articles in (or belonging to) this magazine:
-    * GET http://www.example.gov/api/v1/magazines/1234/articles.json
-* All articles in this magazine in XML format:
-    * GET http://example.gov/api/v1/magazines/1234/articles.xml
+    * GET http://www.example.gov/api/v1/magazines/1234/
 * Specify optional fields in a comma separated list:
-    * GET http://www.example.gov/api/v1/magazines/1234.json?fields=title,subtitle,date
+    * GET http://www.example.gov/api/v1/magazines/1234?fields=title,subtitle,date
 * Add a new article to a particular magazine:
     * POST http://example.gov/api/v1/magazines/1234/articles
 
@@ -256,40 +249,3 @@ Request body:
     ]
 
 
-## Mock Responses
-It is suggested that each resource accept a 'mock' parameter on the testing server. Passing this parameter should return a mock data response (bypassing the backend).
-
-Implementing this feature early in development ensures that the API will exhibit consistent behavior, supporting a test driven development methodology.
-
-Note: If the mock parameter is included in a request to the production environment, an error should be raised.
-
-
-## JSONP
-
-JSONP is easiest explained with an example. Here's one from [StackOverflow](http://stackoverflow.com/questions/2067472/what-is-jsonp-all-about?answertab=votes#tab-top):
-
-> Say you're on domain abc.com, and you want to make a request to domain xyz.com. To do so, you need to cross domain boundaries, a no-no in most of browserland.
-
-> The one item that bypasses this limitation is `<script>` tags. When you use a script tag, the domain limitation is ignored, but under normal circumstances, you can't really DO anything with the results, the script just gets evaluated.
-
-> Enter JSONP. When you make your request to a server that is JSONP enabled, you pass a special parameter that tells the server a little bit about your page. That way, the server is able to nicely wrap up its response in a way that your page can handle.
-
-> For example, say the server expects a parameter called "callback" to enable its JSONP capabilities. Then your request would look like:
-
->         http://www.xyz.com/sample.aspx?callback=mycallback
-
-> Without JSONP, this might return some basic javascript object, like so:
-
->         { foo: 'bar' }
-
-> However, with JSONP, when the server receives the "callback" parameter, it wraps up the result a little differently, returning something like this:
-
->         mycallback({ foo: 'bar' });
-
-> As you can see, it will now invoke the method you specified. So, in your page, you define the callback function:
-
->         mycallback = function(data){
->             alert(data.foo);
->         };
-
-http://stackoverflow.com/questions/2067472/what-is-jsonp-all-about?answertab=votes#tab-top
