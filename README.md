@@ -1,3 +1,4 @@
+
 # White House Web API Standards
 
 * [Guidelines](#guidelines)
@@ -20,7 +21,7 @@ This document borrows heavily from:
 * [Designing HTTP Interfaces and RESTful Web Services](https://www.youtube.com/watch?v=zEyg0TnieLg)
 * [API Facade Pattern](http://apigee.com/about/resources/ebooks/api-fa%C3%A7ade-pattern), by Brian Mulloy, Apigee
 * [Web API Design](http://pages.apigee.com/web-api-design-ebook.html), by Brian Mulloy, Apigee
-* [Fielding's Dissertation on REST](http://www.ics.uci.edu/~fielding/pubs/dissertation/top.htm)
+* [Fielding's Dissertation on REST](http://ics.uci.edu/~fielding/pubs/dissertation/top.htm)
 
 ## Pragmatic REST
 
@@ -47,34 +48,34 @@ These guidelines aim to support a truly RESTful API. Here are a few exceptions:
 
 ### Good URL examples
 * List of magazines:
-    * GET http://www.example.gov/api/v1/magazines.json
+    * GET http://example.gov/api/v1/magazines.json
 * Filtering is a query:
-    * GET http://www.example.gov/api/v1/magazines.json?year=2011&sort=desc
-    * GET http://www.example.gov/api/v1/magazines.json?topic=economy&year=2011
+    * GET http://example.gov/api/v1/magazines.json?year=2011&sort=desc
+    * GET http://example.gov/api/v1/magazines.json?topic=economy&year=2011
 * A single magazine in JSON format:
-    * GET http://www.example.gov/api/v1/magazines/1234.json
+    * GET http://example.gov/api/v1/magazines/1234.json
 * All articles in (or belonging to) this magazine:
-    * GET http://www.example.gov/api/v1/magazines/1234/articles.json
+    * GET http://example.gov/api/v1/magazines/1234/articles.json
 * All articles in this magazine in XML format:
     * GET http://example.gov/api/v1/magazines/1234/articles.xml
 * Specify optional fields in a comma separated list:
-    * GET http://www.example.gov/api/v1/magazines/1234.json?fields=title,subtitle,date
+    * GET http://example.gov/api/v1/magazines/1234.json?fields=title,subtitle,date
 * Add a new article to a particular magazine:
     * POST http://example.gov/api/v1/magazines/1234/articles
 
 ### Bad URL examples
 * Non-plural noun:
-    * http://www.example.gov/magazine
-    * http://www.example.gov/magazine/1234
-    * http://www.example.gov/publisher/magazine/1234
+    * http://example.gov/magazine
+    * http://example.gov/magazine/1234
+    * http://example.gov/publisher/magazine/1234
 * Verb in URL:
-    * http://www.example.gov/magazine/1234/create
+    * http://example.gov/magazine/1234/create
 * Filter outside of query string
-    * http://www.example.gov/magazines/2011/desc
+    * http://example.gov/magazines/2011/desc
 
 ## HTTP Verbs
 
-HTTP verbs, or methods, should be used in compliance with their definitions under the [HTTP/1.1](http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html) standard.
+HTTP verbs, or methods, should be used in compliance with their definitions under the [HTTP/1.1](http://w3.org/Protocols/rfc2616/rfc2616-sec9.html) standard.
 The action taken on the representation will be contextual to the media type being worked on and its current state. Here's an example of how HTTP verbs map to create, read, update, delete operations in a particular context:
 
 | HTTP METHOD | POST            | GET       | PUT         | DELETE |
@@ -122,7 +123,7 @@ Error responses should include a common HTTP status code, message for the develo
        suggestions about how to solve their problems here",
       "userMessage" : "This is a message that can be passed along to end-users, if needed.",
       "errorCode" : "444444",
-      "moreInfo" : "http://www.example.gov/developer/path/to/help/for/444444,
+      "moreInfo" : "http://example.gov/developer/path/to/help/for/444444,
        http://drupal.org/node/444444",
     }
 
@@ -276,7 +277,7 @@ JSONP is easiest explained with an example. Here's one from [StackOverflow](http
 
 > For example, say the server expects a parameter called "callback" to enable its JSONP capabilities. Then your request would look like:
 
->         http://www.xyz.com/sample.aspx?callback=mycallback
+>         http://xyz.com/sample.aspx?callback=mycallback
 
 > Without JSONP, this might return some basic javascript object, like so:
 
